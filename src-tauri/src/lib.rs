@@ -15,11 +15,19 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .setup(|app| {
-            // Initialize database
+            // Use custom database path: LocalAppData\Spexor on Windows
+            #[cfg(target_os = "windows")]
+            let app_dir = {
+                let local_app_data = std::env::var("LOCALAPPDATA").expect("LOCALAPPDATA not set");
+                std::path::PathBuf::from(local_app_data).join("Spexor")
+            };
+
+            #[cfg(not(target_os = "windows"))]
             let app_dir = app
                 .path()
                 .app_data_dir()
                 .expect("Failed to get app data dir");
+
             std::fs::create_dir_all(&app_dir).expect("Failed to create app data dir");
 
             services::init_db(&app_dir).expect("Failed to initialize database");
