@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "started_at": "2026-01-27T07:58:56Z",
+  "last_updated": "2026-01-27T07:59:10Z",
+  "phases": {
+    "system_deps": "done",
+    "node_deps": "done",
+    "python_env": "running",
+    "verify": "pending"
+  },
+  "packages": {
+    "installed": [],
+    "failed": [],
+    "skipped": []
+  }
+}

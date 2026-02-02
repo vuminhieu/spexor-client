@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPEXOR - Audio to Text Investigation</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">S</div>
+                    <span class="logo-text">SPEXOR</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-page="cases">
+                    <span class="nav-icon">📁</span>
+                    <span class="nav-text">Quản lý sự vụ</span>
+                </a>
+                <a href="#" class="nav-item" data-page="users">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-text">Quản lý người dùng</span>
+                </a>
+                <a href="#" class="nav-item" data-page="speakers">
+                    <span class="nav-icon">🎤</span>
+                    <span class="nav-text">Quản lý người nói</span>
+                </a>
+                <a href="#" class="nav-item has-submenu" data-page="vocabulary">
+                    <span class="nav-icon">📚</span>
+                    <span class="nav-text">Quản lý từ vựng</span>
+                    <span class="nav-arrow">▼</span>
+                </a>
+                <div class="submenu">
+                    <a href="#" class="nav-item sub" data-page="alert-words">
+                        <span class="nav-icon">⚠️</span>
+                        <span class="nav-text">Từ ngữ cảnh báo</span>
+                    </a>
+                    <a href="#" class="nav-item sub" data-page="replacements">
+                        <span class="nav-icon">🔄</span>
+                        <span class="nav-text">Từ ngữ thay thế</span>
+                    </a>
+                </div>
+                <a href="#" class="nav-item" data-page="logs">
+                    <span class="nav-icon">📝</span>
+                    <span class="nav-text">Nhật ký hoạt động</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="#" class="nav-item" data-page="notifications">
+                    <span class="nav-icon">🔔</span>
+                    <span class="nav-text">Thông báo</span>
+                    <span class="badge">3</span>
+                </a>
+                <a href="#" class="nav-item" data-page="support">
+                    <span class="nav-icon">❓</span>
+                    <span class="nav-text">Hỗ trợ</span>
+                </a>
+                <div class="user-profile">
+                    <div class="avatar">A</div>
+                    <span class="user-name">Admin</span>
+                    <span class="user-menu">⋮</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Page -->
+            <div id="page-dashboard" class="page active">
+                <div class="page-header">
+                    <h1>Dashboard</h1>
+                </div>
+
+                <!-- Stats Cards - 5 columns -->
+                <div class="stats-grid-5">
+                    <div class="stat-card-new clickable" onclick="showPage('cases')">
+                        <div class="stat-card-icon">
+                            <span>📁</span>
+                        </div>
+                        <div class="stat-card-content">
+                            <span class="stat-number">2,847</span>
+                            <span class="stat-text">Tổng vụ việc</span>
+                        </div>
+                    </div>
+                    <div class="stat-card-new clickable" onclick="showPage('workspace')">
+                        <div class="stat-card-icon">
+                            <span>🎵</span>
+                        </div>
+                        <div class="stat-card-content">
+                            <span class="stat-number">12,459</span>
+                            <span class="stat-text">Tổng file ghi âm</span>
+                        </div>
+                    </div>
+                    <div class="stat-card-new clickable" onclick="showPage('alert-words')">
+                        <div class="stat-card-icon">
+                            <span>📚</span>
+                        </div>
+                        <div class="stat-card-content">
+                            <span class="stat-number">156</span>
+                            <span class="stat-text">Tổng số từ vựng</span>
+                        </div>
+                    </div>
+                    <div class="stat-card-new clickable" onclick="showPage('speakers')">
+                        <div class="stat-card-icon">
+                            <span>🎤</span>
+                        </div>
+                        <div class="stat-card-content">
+                            <span class="stat-number">14</span>
+                            <span class="stat-text">Tổng số người nói</span>
+                        </div>
+                    </div>
+                    <div class="stat-card-new clickable" onclick="showPage('users')">
+                        <div class="stat-card-icon">
+                            <span>👥</span>
+                        </div>
+                        <div class="stat-card-content">
+                            <span class="stat-number">14</span>
+                            <span class="stat-text">Tổng số người dùng</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="dashboard-charts-row">
+                    <!-- Overview Bar Chart -->
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h3>Thống kê tổng quan</h3>
+                            <select class="chart-filter">
+                                <option>📅 Chọn khoảng thời gian</option>
+                                <option>7 ngày qua</option>
+                                <option>30 ngày qua</option>
+                                <option>Năm nay</option>
+                            </select>
+                        </div>
+                        <div class="horizontal-bar-chart">
+                            <div class="bar-row">
+                                <span class="bar-label">Sự vụ</span>
+                                <div class="bar-container">
+                                    <div class="bar bar-yellow" style="width: 85%"></div>
+                                </div>
+                                <span class="bar-value">598</span>
+                            </div>
+                            <div class="bar-row">
+                                <span class="bar-label">File âm thanh</span>
+                                <div class="bar-container">
+                                    <div class="bar bar-orange" style="width: 80%"></div>
+                                </div>
+                                <span class="bar-value">567</span>
+                            </div>
+                            <div class="bar-row">
+                                <span class="bar-label">Từ ngữ cảnh báo</span>
+                                <div class="bar-container">
+                                    <div class="bar bar-blue" style="width: 95%"></div>
+                                </div>
+                                <span class="bar-value">773</span>
+                            </div>
+                            <div class="bar-row">
+                                <span class="bar-label">Từ ngữ thay thế</span>
+                                <div class="bar-container">
+                                    <div class="bar bar-red" style="width: 60%"></div>
+                                </div>
+                                <span class="bar-value">464</span>
+                            </div>
+                            <div class="bar-row">
+                                <span class="bar-label">Người nói</span>
+                                <div class="bar-container">
+                                    <div class="bar bar-green" style="width: 35%"></div>
+                                </div>
+                                <span class="bar-value">222</span>
+                            </div>
+                            <div class="bar-row">
+                                <span class="bar-label">Người dùng hệ thống</span>
+                                <div class="bar-container">
+                                    <div class="bar bar-pink" style="width: 58%"></div>
+                                </div>
+                                <span class="bar-value">484</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Donut Chart -->
+                    <div class="card chart-card chart-card-sm">
+                        <div class="card-header">
+                            <h3>Thống kê người dùng</h3>
+                            <select class="chart-filter">
+                                <option>📅 Chọn khoảng thời gian</option>
+                            </select>
+                        </div>
+                        <div class="donut-chart-container">
+                            <div class="donut-chart">
+                                <svg viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="40" fill="none" stroke="#2a2a4a" stroke-width="20" />
+                                    <circle cx="50" cy="50" r="40" fill="none" stroke="#10b981" stroke-width="20"
+                                        stroke-dasharray="157 94" stroke-dashoffset="0" transform="rotate(-90 50 50)" />
+                                    <circle cx="50" cy="50" r="40" fill="none" stroke="#f472b6" stroke-width="20"
+                                        stroke-dasharray="94 157" stroke-dashoffset="-157"
+                                        transform="rotate(-90 50 50)" />
+                                </svg>
+                                <div class="donut-center">
+                                    <span class="donut-icon">👆</span>
+                                    <span class="donut-label">Connected</span>
+                                    <span class="donut-value">12 (63%)</span>
+                                </div>
+                            </div>
+                            <div class="donut-legend">
+                                <div class="legend-item">
+                                    <span class="legend-dot green"></span>
+                                    <span>Kích hoạt</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-dot pink"></span>
+                                    <span>Vô hiệu hóa</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Monthly Stats Chart -->
+                <div class="card chart-card chart-card-full">
+                    <div class="card-header">
+                        <h3>Thống kê theo sự vụ</h3>
+                        <select class="chart-filter">
+                            <option>📅 Chọn năm</option>
+                            <option selected>2026</option>
+                            <option>2025</option>
+                        </select>
+                    </div>
+                    <div class="monthly-chart">
+                        <div class="chart-y-axis">
+                            <span>50</span>
+                            <span>40</span>
+                            <span>30</span>
+                            <span>20</span>
+                            <span>10</span>
+                            <span>0</span>
+                        </div>
+                        <div class="chart-bars-container">
+                            <div class="month-group">
+                                <div class="month-bars">
+                                    <div class="v-bar bar-blue" style="height: 60%"></div>
+                                    <div class="v-bar bar-lightblue" style="height: 40%"></div>
+                                </div>
+                                <span class="month-label">Jan</span>
+                            </div>
+                            <div class="month-group">
+                                <div class="month-bars">
+                                    <div class="v-bar bar-blue" style="height: 80%"></div>
+                                    <div class="v-bar bar-lightblue" style="height: 55%"></div>
+                                </div>
+                                <span class="month-label">Feb</span>
+                            </div>
+                            <div class="month-group">
+                                <div class="month-bars">
+                                    <div class="v-bar bar-blue" style="height: 70%"></div>
+                                    <div class="v-bar bar-lightblue" style="height: 45%"></div>
+                                </div>
+                                <span class="month-label">Mar</span>
+                            </div>
+                            <div class="month-group">
+                                <div class="month-bars">
+                                    <div class="v-bar bar-blue" style="height: 85%"></div>
+                                    <div class="v-bar bar-lightblue" style="height: 60%"></div>
+                                </div>
+                                <span class="month-label">Apr</span>
+                            </div>
+                            <div class="month-group">
+                                <div class="month-bars">
+                                    <div class="v-bar bar-blue" style="height: 50%"></div>
+                                    <div class="v-bar bar-lightblue" style="height: 30%"></div>
+                                </div>
+                                <span class="month-label">May</span>
+                            </div>
+                            <div class="month-group">
+                                <div class="month-bars">
+                                    <div class="v-bar bar-blue" style="height: 40%"></div>
+                                    <div class="v-bar bar-lightblue" style="height: 20%"></div>
+                                </div>
+                                <span class="month-label">Jun</span>
+                            </div>
+                            <div class="month-group">
+                                <div class="month-bars">
+                                    <div class="v-bar bar-blue" style="height: 55%"></div>
+                                    <div class="v-bar bar-lightblue" style="height: 35%"></div>
+                                </div>
+                                <span class="month-label">Jul</span>
+                            </div>
+                            <div class="month-group">
+                                <div class="month-bars">
+                                    <div class="v-bar bar-blue" style="height: 30%"></div>
+                                    <div class="v-bar bar-lightblue" style="height: 18%"></div>
+                                </div>
+                                <span class="month-label">Aug</span>
+                            </div>
+                            <div class="month-group">
+                                <div class="month-bars">
+                                    <div class="v-bar bar-blue" style="height: 45%"></div>
+                                    <div class="v-bar bar-lightblue" style="height: 25%"></div>
+                                </div>
+                                <span class="month-label">Sep</span>
+                            </div>
+                            <div class="month-group">
+                                <div class="month-bars">
+                                    <div class="v-bar bar-blue" style="height: 90%"></div>
+                                    <div class="v-bar bar-lightblue" style="height: 65%"></div>
+                                </div>
+                                <span class="month-label">Oct</span>
+                            </div>
+                            <div class="month-group">
+                                <div class="month-bars">
+                                    <div class="v-bar bar-blue" style="height: 75%"></div>
+                                    <div class="v-bar bar-lightblue" style="height: 50%"></div>
+                                </div>
+                                <span class="month-label">Nov</span>
+                            </div>
+                            <div class="month-group">
+                                <div class="month-bars">
+                                    <div class="v-bar bar-blue" style="height: 35%"></div>
+                                    <div class="v-bar bar-lightblue" style="height: 22%"></div>
+                                </div>
+                                <span class="month-label">Dec</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-legend-center">
+                        <span class="legend-item"><span class="legend-dot blue"></span> File đã xử lý</span>
+                        <span class="legend-item"><span class="legend-dot lightblue"></span> File xuất báo cáo</span>
+                    </div>
+                </div>
+
+                <!-- Recent Activities Table -->
+                <div class="card activity-table-card">
+                    <div class="card-header">
+                        <h3>Hoạt động gần đây (5)</h3>
+                    </div>
+                    <table class="activity-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Sự kiện</th>
+                                <th>Người tạo</th>
+                                <th>Mô tả</th>
+                                <th>Thời gian tạo</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>01</td>
+                                <td>Trần Văn A</td>
+                                <td>Trần Văn A</td>
+                                <td>Trần Văn A</td>
+                                <td>2024-01-15</td>
+                                <td><button class="btn-icon">👁️</button></td>
+                            </tr>
+                            <tr>
+                                <td>02</td>
+                                <td>Trần Văn B</td>
+                                <td>Trần Văn A</td>
+                                <td>Trần Văn A</td>
+                                <td>2024-01-15</td>
+                                <td><button class="btn-icon">👁️</button></td>
+                            </tr>
+                            <tr>
+                                <td>03</td>
+                                <td>Trần Văn C</td>
+                                <td>Quản trị viên</td>
+                                <td>Trần Văn A</td>
+                                <td>2024-01-15</td>
+                                <td><button class="btn-icon">👁️</button></td>
+                            </tr>
+                            <tr>
+                                <td>04</td>
+                                <td>Trần Văn D</td>
+                                <td>Quản trị viên</td>
+                                <td>Trần Văn A</td>
+                                <td>2024-01-15</td>
+                                <td><button class="btn-icon">👁️</button></td>
+                            </tr>
+                            <tr>
+                                <td>05</td>
+                                <td>Trần Văn E</td>
+                                <td>Quản trị viên</td>
+                                <td>Trần Văn A</td>
+                                <td>2024-01-15</td>
+                                <td><button class="btn-icon">👁️</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Cases Page -->
+            <div id="page-cases" class="page">
+                <div class="page-header">
+                    <h1>Quản lý sự vụ</h1>
+                    <div class="header-actions">
+                        <div class="search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" placeholder="Tìm kiếm sự vụ...">
+                        </div>
+                        <button class="btn btn-primary" onclick="showCaseModal()">+ Thêm sự vụ</button>
+                    </div>
+                </div>
+
+                <div class="cases-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mã sự vụ</th>
+                                <th>Tiêu đề</th>
+                                <th>Số file</th>
+                                <th>Cảnh báo</th>
+                                <th>Ngày tạo</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr onclick="openCaseWorkspace('VV-2026-015')">
+                                <td><span class="case-id">VV-2026-015</span></td>
+                                <td>Vụ án tài chính ABC Corp</td>
+                                <td>8</td>
+                                <td><span class="alert-count">5</span></td>
+                                <td>22/01/2026</td>
+                                <td class="actions">
+                                    <button class="btn-icon" title="Xem">👁️</button>
+                                    <button class="btn-icon" title="Sửa">✏️</button>
+                                    <button class="btn-icon" title="Xuất">📤</button>
+                                </td>
+                            </tr>
+                            <tr onclick="openCaseWorkspace('VV-2026-014')">
+                                <td><span class="case-id">VV-2026-014</span></td>
+                                <td>Điều tra nội bộ XYZ</td>
+                                <td>12</td>
+                                <td><span class="alert-count">3</span></td>
+                                <td>20/01/2026</td>
+                                <td class="actions">
+                                    <button class="btn-icon" title="Xem">👁️</button>
+                                    <button class="btn-icon" title="Sửa">✏️</button>
+                                    <button class="btn-icon" title="Xuất">📤</button>
+                                </td>
+                            </tr>
+                            <tr onclick="openCaseWorkspace('VV-2026-013')">
+                                <td><span class="case-id">VV-2026-013</span></td>
+                                <td>Vụ việc phòng chống tham nhũng</td>
+                                <td>3</td>
+                                <td><span class="alert-count">0</span></td>
+                                <td>19/01/2026</td>
+                                <td class="actions">
+                                    <button class="btn-icon" title="Xem">👁️</button>
+                                    <button class="btn-icon" title="Sửa">✏️</button>
+                                    <button class="btn-icon" title="Xuất">📤</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Audio Workspace Page -->
+            <div id="page-workspace" class="page">
+                <div class="page-header workspace-header">
+                    <div class="workspace-header-left">
+                        <div class="workspace-breadcrumb">
+                            <a href="#" onclick="showPage('cases')">Sự vụ</a> / <span
+                                id="workspace-case-id">VV-2026-015</span>
+                        </div>
+                        <div class="case-info-panel">
+                            <div class="case-info-row">
+                                <label>Tiêu đề:</label>
+                                <input type="text" id="workspace-case-title" class="case-title-input"
+                                    value="Vụ án tài chính ABC Corp" placeholder="Nhập tiêu đề sự vụ">
+                            </div>
+                            <div class="case-info-row">
+                                <label>Mô tả:</label>
+                                <input type="text" id="workspace-case-description" class="case-desc-input" value=""
+                                    placeholder="Mô tả chi tiết...">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary">📤 Export Word</button>
+                        <button class="btn btn-secondary">📤 Export PDF</button>
+                        <button class="btn btn-primary" onclick="saveCaseFromWorkspace()">💾 Lưu</button>
+                    </div>
+                </div>
+
+                <div class="workspace-container">
+                    <!-- Audio Files List -->
+                    <div class="audio-files-panel">
+                        <div class="panel-header">
+                            <h3>File Audio</h3>
+                            <button class="btn btn-sm" onclick="openModal('modal-upload')">+ Upload</button>
+                        </div>
+                        <div class="audio-list" id="audio-file-list">
+                            <div class="audio-item active" data-file-id="1">
+                                <span class="audio-icon">🎵</span>
+                                <div class="audio-info">
+                                    <span class="audio-name">cuoc_goi_001.wav</span>
+                                    <span class="audio-duration">05:32</span>
+                                </div>
+                                <span class="audio-status completed">✓</span>
+                                <button class="audio-action-btn" onclick="reanalyzeAudio(1, event)"
+                                    title="Phân tích lại">🔄</button>
+                                <button class="audio-delete-btn" onclick="deleteAudioFile(1, event)"
+                                    title="Xóa file">🗑️</button>
+                            </div>
+                            <div class="audio-item" data-file-id="2">
+                                <span class="audio-icon">🎵</span>
+                                <div class="audio-info">
+                                    <span class="audio-name">cuoc_goi_002.wav</span>
+                                    <span class="audio-duration">12:45</span>
+                                    <!-- Progress Bar for processing file -->
+                                    <div class="audio-progress">
+                                        <div class="audio-progress-bar" style="width: 65%"></div>
+                                        <span class="audio-progress-text">65%</span>
+                                    </div>
+                                </div>
+                                <span class="audio-status processing">⏳</span>
+                                <button class="audio-action-btn" onclick="reanalyzeAudio(2, event)"
+                                    title="Phân tích lại">🔄</button>
+                                <button class="audio-delete-btn" onclick="deleteAudioFile(2, event)"
+                                    title="Xóa file">🗑️</button>
+                            </div>
+                            <div class="audio-item" data-file-id="3">
+                                <span class="audio-icon">🎵</span>
+                                <div class="audio-info">
+                                    <span class="audio-name">ghi_am_hop.mp3</span>
+                                    <span class="audio-duration">45:20</span>
+                                </div>
+                                <span class="audio-status pending">○</span>
+                                <button class="audio-action-btn" onclick="reanalyzeAudio(3, event)"
+                                    title="Phân tích lại">🔄</button>
+                                <button class="audio-delete-btn" onclick="deleteAudioFile(3, event)"
+                                    title="Xóa file">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Workspace -->
+                    <div class="workspace-main">
+                        <!-- Audio Player -->
+                        <div class="audio-player-section">
+                            <div class="waveform">
+                                <div class="waveform-visual">
+                                    <div class="wave-bar" style="height: 30%"></div>
+                                    <div class="wave-bar" style="height: 50%"></div>
+                                    <div class="wave-bar" style="height: 80%"></div>
+                                    <div class="wave-bar" style="height: 60%"></div>
+                                    <div class="wave-bar" style="height: 90%"></div>
+                                    <div class="wave-bar" style="height: 40%"></div>
+                                    <div class="wave-bar" style="height: 70%"></div>
+                                    <div class="wave-bar" style="height: 55%"></div>
+                                    <div class="wave-bar" style="height: 85%"></div>
+                                    <div class="wave-bar" style="height: 45%"></div>
+                                    <div class="wave-bar" style="height: 65%"></div>
+                                    <div class="wave-bar" style="height: 75%"></div>
+                                    <div class="wave-bar" style="height: 50%"></div>
+                                    <div class="wave-bar" style="height: 35%"></div>
+                                    <div class="wave-bar" style="height: 60%"></div>
+                                </div>
+                                <div class="waveform-progress" style="width: 35%"></div>
+                            </div>
+                            <div class="player-controls">
+                                <div class="time-display">
+                                    <span class="current-time">01:56</span>
+                                    <span class="separator">/</span>
+                                    <span class="total-time">05:32</span>
+                                </div>
+                                <div class="control-buttons">
+                                    <button class="control-btn">⏮️</button>
+                                    <button class="control-btn">⏪</button>
+                                    <button class="control-btn play-btn">▶️</button>
+                                    <button class="control-btn">⏩</button>
+                                    <button class="control-btn">⏭️</button>
+                                </div>
+                                <div class="speed-control">
+                                    <label>Tốc độ:</label>
+                                    <select>
+                                        <option>0.5x</option>
+                                        <option>0.75x</option>
+                                        <option selected>1x</option>
+                                        <option>1.25x</option>
+                                        <option>1.5x</option>
+                                        <option>2x</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Transcript Editor -->
+                        <div class="transcript-section">
+                            <div class="transcript-header">
+                                <h3>Bản ghi âm</h3>
+                                <div class="transcript-actions">
+                                    <div class="search-box small">
+                                        <span class="search-icon">🔍</span>
+                                        <input type="text" placeholder="Tìm từ khóa...">
+                                    </div>
+                                    <button class="btn btn-sm" onclick="scrollToSummary()">📝 Tóm tắt AI</button>
+                                </div>
+                            </div>
+                            <!-- Restore Bar (hidden by default) -->
+                            <div class="restore-bar hidden" id="restore-bar">
+                                <span class="restore-info">
+                                    <span id="deleted-count">0</span> đoạn đã bị ẩn
+                                </span>
+                                <button class="btn btn-sm restore-btn" onclick="restoreAllSegments()">
+                                    ↩️ Khôi phục tất cả
+                                </button>
+                            </div>
+                            <div class="transcript-content" id="transcript-content">
+                                <div class="transcript-segment" data-segment-id="1" data-start="0" data-end="15">
+                                    <div class="segment-time">00:00</div>
+                                    <div class="segment-speaker speaker-a">Speaker A</div>
+                                    <div class="segment-text">
+                                        Xin chào, tôi muốn hỏi về vụ việc <span class="highlight-alert">chuyển
+                                            khoản</span> hôm qua.
+                                    </div>
+                                    <button class="segment-delete-btn" onclick="deleteSegment(1)"
+                                        title="Xóa đoạn này">🗑️</button>
+                                </div>
+                                <div class="transcript-segment" data-segment-id="2" data-start="15" data-end="35">
+                                    <div class="segment-time">00:15</div>
+                                    <div class="segment-speaker speaker-b">Speaker B</div>
+                                    <div class="segment-text">
+                                        Vâng, tôi đã nhận được thông tin. Số <span class="highlight-alert">tiền
+                                            mặt</span> là bao nhiêu?
+                                    </div>
+                                    <button class="segment-delete-btn" onclick="deleteSegment(2)"
+                                        title="Xóa đoạn này">🗑️</button>
+                                </div>
+                                <div class="transcript-segment active" data-segment-id="3" data-start="35"
+                                    data-end="55">
+                                    <div class="segment-time">00:35</div>
+                                    <div class="segment-speaker speaker-a">Speaker A</div>
+                                    <div class="segment-text">
+                                        Khoảng năm trăm triệu. Chúng ta có thể gặp mặt để bàn chi tiết không?
+                                    </div>
+                                    <button class="segment-delete-btn" onclick="deleteSegment(3)"
+                                        title="Xóa đoạn này">🗑️</button>
+                                </div>
+                                <div class="transcript-segment" data-segment-id="4" data-start="55" data-end="80">
+                                    <div class="segment-time">00:55</div>
+                                    <div class="segment-speaker speaker-b">Speaker B</div>
+                                    <div class="segment-text">
+                                        Được, chiều nay 3 giờ tại quán cà phê như đã hẹn nhé.
+                                    </div>
+                                    <button class="segment-delete-btn" onclick="deleteSegment(4)"
+                                        title="Xóa đoạn này">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel - Speakers & Summary -->
+                    <div class="workspace-right">
+                        <!-- Speakers Panel -->
+                        <div class="speakers-panel">
+                            <div class="panel-header">
+                                <h3>Người nói</h3>
+                                <button class="btn btn-sm" onclick="showAddSpeakerToTranscript()">+ Thêm</button>
+                            </div>
+                            <div class="speaker-list" id="transcript-speakers">
+                                <div class="speaker-item" data-speaker-id="temp-a">
+                                    <div class="speaker-avatar speaker-a">A</div>
+                                    <div class="speaker-info">
+                                        <div class="speaker-select-wrapper">
+                                            <select class="speaker-select" onchange="assignSpeaker(this, 'temp-a')">
+                                                <option value="">-- Chọn người nói --</option>
+                                                <option value="new">➕ Thêm người nói mới...</option>
+                                            </select>
+                                        </div>
+                                        <span class="speaker-duration">2:45</span>
+                                    </div>
+                                    <button class="btn-icon" title="Xóa"
+                                        onclick="removeSpeakerFromTranscript('temp-a')">🗑️</button>
+                                </div>
+                                <div class="speaker-item" data-speaker-id="temp-b">
+                                    <div class="speaker-avatar speaker-b">B</div>
+                                    <div class="speaker-info">
+                                        <div class="speaker-select-wrapper">
+                                            <select class="speaker-select" onchange="assignSpeaker(this, 'temp-b')">
+                                                <option value="">-- Chọn người nói --</option>
+                                                <option value="new">➕ Thêm người nói mới...</option>
+                                            </select>
+                                        </div>
+                                        <span class="speaker-duration">2:47</span>
+                                    </div>
+                                    <button class="btn-icon" title="Xóa"
+                                        onclick="removeSpeakerFromTranscript('temp-b')">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Alerts Panel -->
+                        <div class="alerts-panel-small">
+                            <div class="panel-header">
+                                <h3>Cảnh báo</h3>
+                                <span class="badge red">2</span>
+                            </div>
+                            <div class="alert-list-small">
+                                <div class="alert-item-small" onclick="jumpToTime(15)">
+                                    <span class="alert-word">chuyển khoản</span>
+                                    <span class="alert-time-small">00:08</span>
+                                </div>
+                                <div class="alert-item-small" onclick="jumpToTime(25)">
+                                    <span class="alert-word">tiền mặt</span>
+                                    <span class="alert-time-small">00:22</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Summary Panel -->
+                        <div class="summary-panel enhanced">
+                            <div class="panel-header">
+                                <h3>🤖 Tóm tắt AI</h3>
+                                <button class="btn-icon" onclick="copySummary()" title="Sao chép">📋</button>
+                            </div>
+                            <div class="summary-level-selector">
+                                <label>Mức độ:</label>
+                                <div class="level-buttons">
+                                    <button class="level-btn" onclick="changeSummaryLevel('short')">Ngắn</button>
+                                    <button class="level-btn active" onclick="changeSummaryLevel('medium')">Trung
+                                        bình</button>
+                                    <button class="level-btn" onclick="changeSummaryLevel('detailed')">Chi tiết</button>
+                                </div>
+                            </div>
+                            <div class="summary-content-card" id="summary-content">
+                                <div class="summary-topic">
+                                    <span class="topic-label">Chủ đề:</span>
+                                    <span class="topic-value">Giao dịch tài chính</span>
+                                </div>
+                                <div class="summary-main">
+                                    <span class="main-label">Ý chính:</span>
+                                    <ul class="summary-points">
+                                        <li>Thảo luận về giao dịch chuyển khoản</li>
+                                        <li>Số tiền: 500 triệu đồng</li>
+                                        <li>Hẹn gặp mặt lúc 15:00</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Short summary version (hidden by default) -->
+                            <div class="summary-content-card hidden" id="summary-short">
+                                <div class="summary-topic">
+                                    <span class="topic-label">Chủ đề:</span>
+                                    <span class="topic-value">Giao dịch tài chính</span>
+                                </div>
+                                <div class="summary-main">
+                                    <span class="main-label">Tóm tắt:</span>
+                                    <p class="summary-brief">Cuộc họp về chuyển khoản 500 triệu, hẹn gặp lúc 15:00.</p>
+                                </div>
+                            </div>
+                            <!-- Detailed summary version (hidden by default) -->
+                            <div class="summary-content-card hidden" id="summary-detailed">
+                                <div class="summary-topic">
+                                    <span class="topic-label">Chủ đề:</span>
+                                    <span class="topic-value">Giao dịch tài chính - Chuyển khoản liên ngân hàng</span>
+                                </div>
+                                <div class="summary-main">
+                                    <span class="main-label">Nội dung chi tiết:</span>
+                                    <ul class="summary-points">
+                                        <li><strong>Bối cảnh:</strong> Cuộc gọi giữa 2 đối tượng bàn về giao dịch tài
+                                            chính</li>
+                                        <li><strong>Nội dung giao dịch:</strong> Thảo luận về việc chuyển khoản số tiền
+                                            lớn</li>
+                                        <li><strong>Số tiền:</strong> 500 triệu đồng (năm trăm triệu đồng)</li>
+                                        <li><strong>Phương thức:</strong> Chuyển khoản ngân hàng</li>
+                                        <li><strong>Lịch hẹn:</strong> Gặp mặt trực tiếp lúc 15:00</li>
+                                        <li><strong>Địa điểm:</strong> Tại quán cà phê nhà Đại Hạn Nhà</li>
+                                        <li><strong>Cảnh báo:</strong> Phát hiện 2 từ khóa nhạy cảm (chuyển khoản, tiền
+                                            mặt)</li>
+                                    </ul>
+                                </div>
+                                <div class="summary-participants">
+                                    <span class="main-label">Người tham gia:</span>
+                                    <div class="participant-tags">
+                                        <span class="participant-tag">Speaker A (Đối tượng A)</span>
+                                        <span class="participant-tag">Speaker B (Đối tượng B)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Page -->
+            <div id="page-users" class="page">
+                <div class="page-header">
+                    <h1>Quản lý người dùng</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary">+ Thêm người dùng</button>
+                    </div>
+                </div>
+                <div class="users-grid">
+                    <div class="user-card">
+                        <div class="user-avatar admin">A</div>
+                        <div class="user-info">
+                            <h4>Nguyễn Văn Admin</h4>
+                            <span class="role admin">Admin</span>
+                            <p>admin@spexor.local</p>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn-icon">✏️</button>
+                            <button class="btn-icon">🔑</button>
+                        </div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-avatar investigator">T</div>
+                        <div class="user-info">
+                            <h4>Trần Văn Điều Tra</h4>
+                            <span class="role investigator">Điều tra viên</span>
+                            <p>tran.dieutra@spexor.local</p>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn-icon">✏️</button>
+                            <button class="btn-icon">🔑</button>
+                        </div>
+                    </div>
+                    <div class="user-card">
+                        <div class="user-avatar viewer">L</div>
+                        <div class="user-info">
+                            <h4>Lê Thị Xem</h4>
+                            <span class="role viewer">Người xem</span>
+                            <p>le.xem@spexor.local</p>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn-icon">✏️</button>
+                            <button class="btn-icon">🔑</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Speakers Page -->
+            <div id="page-speakers" class="page">
+                <div class="page-header">
+                    <h1>Quản lý người nói</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary">+ Thêm người nói</button>
+                    </div>
+                </div>
+                <div class="speakers-grid">
+                    <div class="speaker-card">
+                        <div class="speaker-photo">👤</div>
+                        <div class="speaker-details">
+                            <h4>Đối tượng A</h4>
+                            <span class="speaker-alias">Biệt danh: "Anh Hai"</span>
+                            <div class="speaker-stats">
+                                <span>📁 5 sự vụ</span>
+                                <span>🕐 2h 30m</span>
+                            </div>
+                        </div>
+                        <div class="speaker-actions">
+                            <button class="btn btn-sm">🎤 Voice Profile</button>
+                            <button class="btn-icon">✏️</button>
+                        </div>
+                    </div>
+                    <div class="speaker-card">
+                        <div class="speaker-photo">👤</div>
+                        <div class="speaker-details">
+                            <h4>Đối tượng B</h4>
+                            <span class="speaker-alias">Biệt danh: "Sếp"</span>
+                            <div class="speaker-stats">
+                                <span>📁 3 sự vụ</span>
+                                <span>🕐 1h 45m</span>
+                            </div>
+                        </div>
+                        <div class="speaker-actions">
+                            <button class="btn btn-sm">🎤 Voice Profile</button>
+                            <button class="btn-icon">✏️</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alert Words Page -->
+            <div id="page-alert-words" class="page">
+                <div class="page-header">
+                    <h1>Từ ngữ cảnh báo</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary">📥 Import</button>
+                        <button class="btn btn-secondary">📤 Export</button>
+                        <button class="btn btn-primary">+ Thêm từ khóa</button>
+                    </div>
+                </div>
+                <div class="category-tabs">
+                    <button class="tab active">Tất cả</button>
+                    <button class="tab">Tài chính</button>
+                    <button class="tab">Bạo lực</button>
+                    <button class="tab">Ma túy</button>
+                    <button class="tab">Khác</button>
+                </div>
+                <div class="keywords-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Từ khóa</th>
+                                <th>Danh mục</th>
+                                <th>Mô tả</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="keyword">tiền mặt</span></td>
+                                <td>Tài chính</td>
+                                <td class="description-cell">Từ khóa liên quan đến giao dịch tiền mặt</td>
+                                <td>
+                                    <button class="btn-icon">✏️</button>
+                                    <button class="btn-icon">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="keyword">chuyển khoản</span></td>
+                                <td>Tài chính</td>
+                                <td class="description-cell">Từ khóa liên quan đến chuyển tiền ngân hàng</td>
+                                <td>
+                                    <button class="btn-icon">✏️</button>
+                                    <button class="btn-icon">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="keyword">gặp mặt</span></td>
+                                <td>Khác</td>
+                                <td class="description-cell">Từ khóa về cuộc hẹn gặp trực tiếp</td>
+                                <td>
+                                    <button class="btn-icon">✏️</button>
+                                    <button class="btn-icon">🗑️</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Replacements Page -->
+            <div id="page-replacements" class="page">
+                <div class="page-header">
+                    <h1>Từ ngữ thay thế</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary">📥 Import</button>
+                        <button class="btn btn-primary">+ Thêm từ thay thế</button>
+                    </div>
+                </div>
+                <div class="replacements-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Từ gốc (AI nhận dạng)</th>
+                                <th>→</th>
+                                <th>Từ đúng</th>
+                                <th>Danh mục</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="word-original">hà nội</span></td>
+                                <td>→</td>
+                                <td><span class="word-correct">Hà Nội</span></td>
+                                <td>Địa danh</td>
+                                <td>
+                                    <button class="btn-icon">✏️</button>
+                                    <button class="btn-icon">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="word-original">tp hcm</span></td>
+                                <td>→</td>
+                                <td><span class="word-correct">TP. Hồ Chí Minh</span></td>
+                                <td>Địa danh</td>
+                                <td>
+                                    <button class="btn-icon">✏️</button>
+                                    <button class="btn-icon">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="word-original">bộ ca</span></td>
+                                <td>→</td>
+                                <td><span class="word-correct">Bộ Công an</span></td>
+                                <td>Tổ chức</td>
+                                <td>
+                                    <button class="btn-icon">✏️</button>
+                                    <button class="btn-icon">🗑️</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Logs Page -->
+            <div id="page-logs" class="page">
+                <div class="page-header">
+                    <h1>Nhật ký hoạt động</h1>
+                    <div class="header-actions">
+                        <input type="date" class="date-filter">
+                        <select class="action-filter">
+                            <option>Tất cả hành động</option>
+                            <option>Đăng nhập</option>
+                            <option>Tạo mới</option>
+                            <option>Chỉnh sửa</option>
+                            <option>Xóa</option>
+                            <option>Export</option>
+                        </select>
+                        <button class="btn btn-secondary">📤 Export</button>
+                    </div>
+                </div>
+                <div class="logs-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Người dùng</th>
+                                <th>Hành động</th>
+                                <th>Đối tượng</th>
+                                <th>Chi tiết</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>22/01/2026 13:45:00</td>
+                                <td>Admin</td>
+                                <td><span class="log-action create">Tạo</span></td>
+                                <td>Sự vụ VV-2026-015</td>
+                                <td><button class="btn btn-sm">Xem</button></td>
+                            </tr>
+                            <tr>
+                                <td>22/01/2026 13:30:00</td>
+                                <td>Trần Điều Tra</td>
+                                <td><span class="log-action edit">Sửa</span></td>
+                                <td>Transcript audio_001</td>
+                                <td><button class="btn btn-sm">Xem</button></td>
+                            </tr>
+                            <tr>
+                                <td>22/01/2026 13:00:00</td>
+                                <td>Admin</td>
+                                <td><span class="log-action export">Export</span></td>
+                                <td>Sự vụ VV-2026-014</td>
+                                <td><button class="btn btn-sm">Xem</button></td>
+                            </tr>
+                            <tr>
+                                <td>22/01/2026 12:00:00</td>
+                                <td>Trần Điều Tra</td>
+                                <td><span class="log-action login">Đăng nhập</span></td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Notifications Page -->
+            <div id="page-notifications" class="page">
+                <div class="page-header">
+                    <h1>Thông báo</h1>
+                    <button class="btn btn-secondary" onclick="markAllNotificationsAsRead()">Đánh dấu tất cả đã
+                        đọc</button>
+                </div>
+
+                <!-- Filter Controls -->
+                <div class="notification-filters">
+                    <div class="filter-group">
+                        <label>Loại sự kiện:</label>
+                        <select id="notification-type-filter" onchange="filterNotifications()">
+                            <option value="all">Tất cả</option>
+                            <option value="alert">⚠️ Cảnh báo</option>
+                            <option value="success">✅ Thành công</option>
+                            <option value="crud">📋 CRUD (Tạo/Sửa/Xóa)</option>
+                            <option value="system">⚙️ Hệ thống</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Từ ngày:</label>
+                        <input type="date" id="notification-date-from" onchange="filterNotifications()">
+                    </div>
+                    <div class="filter-group">
+                        <label>Đến ngày:</label>
+                        <input type="date" id="notification-date-to" onchange="filterNotifications()">
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="resetNotificationFilters()">🔄 Đặt lại</button>
+                    <button class="btn btn-primary btn-sm" onclick="openImportantEventsConfig()">⭐ Sự kiện quan
+                        trọng</button>
+                </div>
+
+                <div class="notifications-list">
+                    <!-- Notifications will be rendered by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Important Events Config Panel -->
+            <div id="important-events-panel" class="important-events-panel hidden">
+                <div class="important-events-header">
+                    <h3>⭐ Cấu hình sự kiện quan trọng</h3>
+                    <button class="btn-icon" onclick="closeImportantEventsConfig()">✕</button>
+                </div>
+                <p class="important-events-desc">Chọn các loại sự kiện bạn muốn được đánh dấu là quan trọng:</p>
+                <div class="important-events-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="important-alert" checked onchange="saveImportantEvents()">
+                        <span>⚠️ Cảnh báo phát hiện từ khóa</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="important-success" onchange="saveImportantEvents()">
+                        <span>✅ Hoàn thành transcription</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="important-create" checked onchange="saveImportantEvents()">
+                        <span>📁 Tạo sự vụ mới</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="important-update" onchange="saveImportantEvents()">
+                        <span>✏️ Cập nhật dữ liệu</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="important-delete" checked onchange="saveImportantEvents()">
+                        <span>🗑️ Xóa dữ liệu</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="important-export" onchange="saveImportantEvents()">
+                        <span>📤 Export báo cáo</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="important-import" onchange="saveImportantEvents()">
+                        <span>📥 Import dữ liệu</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="important-login" onchange="saveImportantEvents()">
+                        <span>🔐 Đăng nhập/Đăng xuất</span>
+                    </label>
+                </div>
+                <div class="important-events-footer">
+                    <button class="btn btn-secondary btn-sm" onclick="resetImportantEvents()">Đặt mặc định</button>
+                    <button class="btn btn-primary btn-sm" onclick="closeImportantEventsConfig()">Xong</button>
+                </div>
+            </div>
+
+            <!-- Support Page -->
+            <div id="page-support" class="page">
+                <div class="page-header">
+                    <h1>Hỗ trợ</h1>
+                </div>
+                <div class="support-content">
+                    <div class="support-section">
+                        <h3>📖 Hướng dẫn sử dụng</h3>
+                        <div class="guide-list">
+                            <a href="#" class="guide-item">Bắt đầu nhanh</a>
+                            <a href="#" class="guide-item">Quản lý sự vụ</a>
+                            <a href="#" class="guide-item">Xử lý audio và transcript</a>
+                            <a href="#" class="guide-item">Xuất báo cáo</a>
+                        </div>
+                    </div>
+                    <div class="support-section">
+                        <h3>⌨️ Phím tắt</h3>
+                        <div class="shortcuts-list">
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Space</span>
+                                <span class="shortcut-desc">Play/Pause audio</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Ctrl + S</span>
+                                <span class="shortcut-desc">Lưu transcript</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <span class="shortcut-keys">Ctrl + F</span>
+                                <span class="shortcut-desc">Tìm kiếm</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="support-section">
+                        <h3>ℹ️ Thông tin hệ thống</h3>
+                        <div class="system-info">
+                            <p><strong>Phiên bản:</strong> SPEXOR v1.0.0</p>
+                            <p><strong>AI Model:</strong> Whisper Large-v3</p>
+                            <p><strong>Database:</strong> SQLite (Encrypted)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- CRUD Modals -->
+
+    <!-- Case Modal (Create/Edit) -->
+    <div id="modal-case" class="modal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2 id="case-modal-title">Thêm sự vụ mới</h2>
+                <button class="modal-close" onclick="closeModal('modal-case')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="case-form">
+                    <input type="hidden" id="case-id">
+
+                    <!-- Case Info Section -->
+                    <div class="form-section">
+                        <h4>📋 Thông tin sự vụ</h4>
+                        <div class="form-group">
+                            <label>Mã sự vụ <span class="required">*</span></label>
+                            <input type="text" id="case-code" placeholder="VV-2026-XXX" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Tiêu đề <span class="required">*</span></label>
+                            <input type="text" id="case-title" placeholder="Nhập tiêu đề sự vụ" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mô tả</label>
+                            <textarea id="case-description" rows="2"
+                                placeholder="Mô tả chi tiết về sự vụ..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Người được gán</label>
+                            <select id="case-assignees" multiple>
+                                <option value="1">Nguyễn Văn Admin</option>
+                                <option value="2">Trần Văn Điều Tra</option>
+                                <option value="3">Lê Thị Xem</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Audio Upload Section -->
+                    <div class="form-section">
+                        <h4>🎵 File Audio</h4>
+                        <div class="audio-upload-zone" id="case-audio-upload">
+                            <div class="upload-dropzone" onclick="document.getElementById('case-audio-files').click()">
+                                <span class="upload-icon">📁</span>
+                                <p>Kéo thả file audio vào đây hoặc <strong>click để chọn</strong></p>
+                                <span class="upload-hint">Hỗ trợ: .wav, .mp3, .m4a, .flac (tối đa 500MB/file)</span>
+                            </div>
+                            <input type="file" id="case-audio-files" multiple accept=".wav,.mp3,.m4a,.flac"
+                                style="display:none" onchange="handleCaseAudioFiles(this.files)">
+                            <div class="uploaded-files-list" id="case-uploaded-list">
+                                <!-- Uploaded files will be listed here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detection Config Section -->
+                    <div class="form-section">
+                        <h4>⚙️ Cấu hình phân tích</h4>
+                        <div class="config-options">
+                            <div class="config-row">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="config-detect-keywords" checked>
+                                    <span>🔍 Phát hiện từ khóa cảnh báo</span>
+                                </label>
+                            </div>
+                            <div class="config-row">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="config-speaker-diarization" checked>
+                                    <span>👥 Phân biệt người nói (Speaker Diarization)</span>
+                                </label>
+                            </div>
+                            <div class="config-row">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="config-ai-summary" checked>
+                                    <span>🤖 Tóm tắt AI tự động</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-case')">Hủy</button>
+                <button class="btn btn-primary" onclick="saveCase()">💾 Lưu sự vụ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Modal (Create/Edit) -->
+    <div id="modal-user" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="user-modal-title">Thêm người dùng mới</h2>
+                <button class="modal-close" onclick="closeModal('modal-user')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="user-form">
+                    <input type="hidden" id="user-id">
+                    <div class="form-group">
+                        <label>Họ và tên <span class="required">*</span></label>
+                        <input type="text" id="user-fullname" placeholder="Nhập họ và tên" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tên đăng nhập <span class="required">*</span></label>
+                        <input type="text" id="user-username" placeholder="Nhập tên đăng nhập" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email <span class="required">*</span></label>
+                        <input type="email" id="user-email" placeholder="email@spexor.local" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Mật khẩu <span class="required">*</span></label>
+                            <input type="password" id="user-password" placeholder="••••••••">
+                        </div>
+                        <div class="form-group">
+                            <label>Xác nhận mật khẩu</label>
+                            <input type="password" id="user-password-confirm" placeholder="••••••••">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Vai trò <span class="required">*</span></label>
+                        <select id="user-role">
+                            <option value="admin">Admin - Quản trị viên</option>
+                            <option value="supervisor">Supervisor - Giám sát viên</option>
+                            <option value="investigator">Investigator - Điều tra viên</option>
+                            <option value="viewer">Viewer - Người xem</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="user-active" checked>
+                            <span>Kích hoạt tài khoản</span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-user')">Hủy</button>
+                <button class="btn btn-primary" onclick="saveUser()">💾 Lưu người dùng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Speaker Modal (Create/Edit) -->
+    <div id="modal-speaker" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="speaker-modal-title">Thêm người nói mới</h2>
+                <button class="modal-close" onclick="closeModal('modal-speaker')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="speaker-form">
+                    <input type="hidden" id="speaker-id">
+                    <div class="form-group">
+                        <label>Tên / Mã định danh <span class="required">*</span></label>
+                        <input type="text" id="speaker-name" placeholder="Đối tượng A, Người nói 1..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>Biệt danh</label>
+                        <input type="text" id="speaker-alias" placeholder="Các biệt danh, phân cách bằng dấu phẩy">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Giới tính</label>
+                            <select id="speaker-gender">
+                                <option value="unknown">Không xác định</option>
+                                <option value="male">Nam</option>
+                                <option value="female">Nữ</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Độ tuổi ước tính</label>
+                            <input type="text" id="speaker-age" placeholder="VD: 30-40">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Mô tả / Ghi chú</label>
+                        <textarea id="speaker-notes" rows="3"
+                            placeholder="Thông tin bổ sung về người nói..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>🎤 Voice Sample (để nhận dạng tự động)</label>
+                        <div class="voice-samples-zone">
+                            <div class="upload-dropzone small"
+                                onclick="document.getElementById('speaker-voice-input').click()">
+                                <span class="upload-icon">📁</span>
+                                <p>Chọn file audio hoặc kéo thả vào đây</p>
+                                <span class="upload-hint">Hỗ trợ: .wav, .mp3, .m4a (tối đa 50MB)</span>
+                            </div>
+                            <input type="file" id="speaker-voice-input" multiple accept=".wav,.mp3,.m4a,.flac"
+                                style="display:none" onchange="handleVoiceSamples(this.files)">
+
+                            <div class="voice-samples-list" id="voice-samples-list">
+                                <!-- Voice samples will be listed here -->
+                            </div>
+
+                            <!-- Audio Player for playback -->
+                            <audio id="voice-sample-player" style="display:none"></audio>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-speaker')">Hủy</button>
+                <button class="btn btn-primary" onclick="saveSpeaker()">💾 Lưu người nói</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Word Modal (Create/Edit) -->
+    <div id="modal-alert-word" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="alert-word-modal-title">Thêm từ khóa cảnh báo</h2>
+                <button class="modal-close" onclick="closeModal('modal-alert-word')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="alert-word-form">
+                    <input type="hidden" id="alert-word-id">
+                    <div class="form-group">
+                        <label>Từ khóa <span class="required">*</span></label>
+                        <input type="text" id="alert-word-text" placeholder="Nhập từ khóa cần cảnh báo" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Danh mục</label>
+                            <select id="alert-word-category">
+                                <option value="financial">Tài chính</option>
+                                <option value="violence">Bạo lực / Đe dọa</option>
+                                <option value="drugs">Ma túy / Chất cấm</option>
+                                <option value="corruption">Hối lộ / Tham nhũng</option>
+                                <option value="terrorism">Khủng bố</option>
+                                <option value="inappropriate">Ngôn ngữ không phù hợp</option>
+                                <option value="other">Khác</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Mức độ ưu tiên</label>
+                            <select id="alert-word-priority">
+                                <option value="high">🔴 Cao</option>
+                                <option value="medium">🟡 Trung bình</option>
+                                <option value="low">🟢 Thấp</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Mô tả / Ghi chú</label>
+                        <textarea id="alert-word-description" rows="2"
+                            placeholder="Mô tả ngữ cảnh sử dụng từ khóa này..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="alert-word-active" checked>
+                            <span>Kích hoạt từ khóa này</span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-alert-word')">Hủy</button>
+                <button class="btn btn-primary" onclick="saveAlertWord()">💾 Lưu từ khóa</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Replacement Word Modal (Create/Edit) -->
+    <div id="modal-replacement" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="replacement-modal-title">Thêm từ ngữ thay thế</h2>
+                <button class="modal-close" onclick="closeModal('modal-replacement')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="replacement-form">
+                    <input type="hidden" id="replacement-id">
+                    <div class="form-group">
+                        <label>Từ gốc (AI nhận dạng sai) <span class="required">*</span></label>
+                        <input type="text" id="replacement-original" placeholder="VD: hà nội" required>
+                        <small class="form-hint">Từ mà AI thường nhận dạng sai hoặc không chính xác</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Từ đúng (Thay thế thành) <span class="required">*</span></label>
+                        <input type="text" id="replacement-correct" placeholder="VD: Hà Nội" required>
+                        <small class="form-hint">Từ đúng cần thay thế</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Danh mục</label>
+                        <select id="replacement-category">
+                            <option value="location">Địa danh</option>
+                            <option value="organization">Tổ chức</option>
+                            <option value="person">Tên người</option>
+                            <option value="medical">Y khoa</option>
+                            <option value="legal">Pháp lý</option>
+                            <option value="technical">Kỹ thuật</option>
+                            <option value="abbreviation">Từ viết tắt</option>
+                            <option value="other">Khác</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="replacement-active" checked>
+                            <span>Kích hoạt tự động thay thế</span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-replacement')">Hủy</button>
+                <button class="btn btn-primary" onclick="saveReplacement()">💾 Lưu từ thay thế</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="modal-delete" class="modal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header danger">
+                <h2>⚠️ Xác nhận xóa</h2>
+                <button class="modal-close" onclick="closeModal('modal-delete')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="delete-message">Bạn có chắc chắn muốn xóa mục này?</p>
+                <p class="warning-text">Hành động này không thể hoàn tác!</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-delete')">Hủy</button>
+                <button class="btn btn-danger" onclick="confirmDelete()">🗑️ Xóa</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Details Modal -->
+    <div id="modal-view" class="modal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2 id="view-modal-title">Chi tiết</h2>
+                <button class="modal-close" onclick="closeModal('modal-view')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="view-content"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-view')">Đóng</button>
+                <button class="btn btn-primary" id="view-edit-btn" onclick="editFromView()">✏️ Chỉnh sửa</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Audio Modal -->
+    <div id="modal-upload" class="modal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>📁 Upload File Audio</h2>
+                <button class="modal-close" onclick="closeModal('modal-upload')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Upload Zone -->
+                <div class="upload-zone" id="upload-zone">
+                    <div class="upload-icon">🎵</div>
+                    <p>Kéo thả file audio vào đây</p>
+                    <p class="text-muted">hoặc</p>
+                    <button class="btn btn-primary" onclick="document.getElementById('audio-files').click()">
+                        📂 Chọn file
+                    </button>
+                    <input type="file" id="audio-files" multiple accept="audio/*,.wav,.mp3,.m4a,.ogg,.flac" hidden>
+                </div>
+                <div id="upload-list" class="upload-list"></div>
+
+                <!-- Transcription Configuration Section -->
+                <div class="config-section">
+                    <h4>⚙️ Cấu hình xử lý Audio</h4>
+                    <div class="config-divider"></div>
+
+                    <div class="config-grid">
+                        <!-- Time Range -->
+                        <div class="config-row">
+                            <label class="config-label">Bắt đầu (hh:mm:ss):</label>
+                            <div class="time-input-group">
+                                <input type="text" id="start-time" class="time-input" value="00:00:00"
+                                    placeholder="00:00:00">
+                                <div class="time-spinners">
+                                    <button class="spinner-btn" onclick="adjustTime('start-time', 1)">▲</button>
+                                    <button class="spinner-btn" onclick="adjustTime('start-time', -1)">▼</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="config-row">
+                            <label class="config-label">Kết thúc (hh:mm:ss):</label>
+                            <div class="time-input-group">
+                                <input type="text" id="end-time" class="time-input" value="00:09:58"
+                                    placeholder="00:00:00">
+                                <div class="time-spinners">
+                                    <button class="spinner-btn" onclick="adjustTime('end-time', 1)">▲</button>
+                                    <button class="spinner-btn" onclick="adjustTime('end-time', -1)">▼</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Language Selection -->
+                        <div class="config-row">
+                            <label class="config-label">Ngôn ngữ:</label>
+                            <select id="audio-language" class="config-select">
+                                <option value="vi-north">Tiếng Việt (Miền Bắc)</option>
+                                <option value="vi-central">Tiếng Việt (Miền Trung)</option>
+                                <option value="vi-south">Tiếng Việt (Miền Nam)</option>
+                                <option value="en">English</option>
+                                <option value="auto">Tự động nhận diện</option>
+                            </select>
+                        </div>
+
+                        <!-- Speaker Diarization -->
+                        <div class="config-row">
+                            <label class="config-label">Nhận diện giọng nói:</label>
+                            <div class="toggle-group">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="speaker-diarization" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="toggle-label">Bật</span>
+                            </div>
+                        </div>
+
+                        <!-- Text Summarization -->
+                        <div class="config-row">
+                            <label class="config-label">Tóm tắt văn bản:</label>
+                            <select id="text-summarization" class="config-select">
+                                <option value="off">Tắt</option>
+                                <option value="short">Ngắn</option>
+                                <option value="medium" selected>Trung bình</option>
+                                <option value="detailed">Chi tiết</option>
+                            </select>
+                        </div>
+
+                        <!-- Alert Word Detection -->
+                        <div class="config-row">
+                            <label class="config-label">Phát hiện từ khóa cảnh báo:</label>
+                            <div class="toggle-group">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="alert-detection" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="toggle-label">Bật</span>
+                            </div>
+                        </div>
+
+                        <!-- Auto-apply Replacement Words -->
+                        <div class="config-row">
+                            <label class="config-label">Tự động thay thế từ ngữ:</label>
+                            <div class="toggle-group">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="auto-replacement" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="toggle-label">Bật</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-upload')">Hủy</button>
+                <button class="btn btn-primary" onclick="uploadFiles()">📤 Xử lý</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div id="modal-export" class="modal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h2>📤 Xuất báo cáo</h2>
+                <button class="modal-close" onclick="closeModal('modal-export')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Định dạng xuất</label>
+                    <div class="export-options">
+                        <label class="radio-card">
+                            <input type="radio" name="export-format" value="word" checked>
+                            <div class="radio-card-content">
+                                <span class="radio-icon">📄</span>
+                                <span>Word (.docx)</span>
+                            </div>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="export-format" value="pdf">
+                            <div class="radio-card-content">
+                                <span class="radio-icon">📕</span>
+                                <span>PDF (.pdf)</span>
+                            </div>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="export-format" value="excel">
+                            <div class="radio-card-content">
+                                <span class="radio-icon">📊</span>
+                                <span>Excel (.xlsx)</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Nội dung xuất</label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" checked>
+                        <span>Bao gồm thông tin sự vụ</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" checked>
+                        <span>Bao gồm transcript đầy đủ</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" checked>
+                        <span>Bao gồm tóm tắt AI</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" checked>
+                        <span>Đánh dấu từ khóa cảnh báo</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-export')">Hủy</button>
+                <button class="btn btn-primary" onclick="doExport()">📥 Xuất file</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

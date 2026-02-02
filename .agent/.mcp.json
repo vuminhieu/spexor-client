@@ -1,0 +1,36 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx.cmd",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp",
+        "--api-key",
+        "ctx7sk-88b6f0ff-622d-48d2-9519-1ae0dd3cfc85"
+      ]
+    },
+    "human-mcp": {
+      "command": "npx.cmd",
+      "args": [
+        "@goonnguyen/human-mcp"
+      ],
+      "env": {
+        "GOOGLE_GEMINI_API_KEY": "your_gemini_api_key_here"
+      }
+    },
+    "chrome-devtools": {
+      "command": "npx.cmd",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@latest"
+      ]
+    },
+    "sequential-thinking": {
+      "command": "npx.cmd",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    }
+  }
+}
